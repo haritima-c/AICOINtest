@@ -70,17 +70,7 @@ Before deploying your app, you need to verify the domain by adding it to the [Do
 
 - [ChatKit JavaScript Library](http://openai.github.io/chatkit-js/)
 - [Advanced Self-Hosting Examples](https://github.com/openai/openai-chatkit-advanced-samples)
-=======
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
+
 ## Chat ID logging endpoint
 
 This implementation receives Qualtrics ID + Prolific ID along with chat conversations, then stores logs keyed by a combined subject ID.
@@ -114,19 +104,3 @@ curl http://localhost:3000/api/chat-logs/Q-123__P-456
 ```
 
 Logs are stored as JSONL files in `logs/<subjectId>.jsonl`.
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
