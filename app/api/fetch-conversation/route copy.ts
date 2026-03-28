@@ -1,14 +1,11 @@
 import fs from "fs";
 import path from "path";
-// import { saveMessageToDB } from "@/lib/db";          // ← ADD
-import { saveMessageToDB, ensureConversationsTable } from "@/lib/db";
 
 export const runtime = "nodejs";
 
 type ThreadItem = {
   id: string;
   type: string;
-  role?: string;  
   content: { type: string; text?: string }[];
 };
 
@@ -19,10 +16,9 @@ export async function POST(req: Request) {
     prolific_system_id?: string | null;
     qualtrics_id?: string | null;
     condition?: string | null;
-    source_url?: string | null;   
   };
 
-  const { session_id, prolific_system_id, prolific_id, qualtrics_id, condition, source_url, } = body;
+  const { session_id, prolific_system_id, prolific_id, qualtrics_id, condition } = body;
 
   if (!session_id) {
     return new Response(JSON.stringify({ error: "Missing session_id" }), {
@@ -31,8 +27,6 @@ export async function POST(req: Request) {
     });
   }
 
-  await ensureConversationsTable();   // ← ADD THIS LINE
-  
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     return new Response(JSON.stringify({ error: "Missing OPENAI_API_KEY" }), {
@@ -111,25 +105,6 @@ export async function POST(req: Request) {
       path.join(logDir, fileId + ".json"),
       JSON.stringify({ session_id, prolific_id, prolific_system_id, qualtrics_id, condition, thread_id: thread.id, items }, null, 2)
     );
-
-    // Step 4: ALSO save to Postgres
-    for (const item of items) {
-      const text = item.content?.find((c) => c.type === "text")?.text ?? "";
-      if (!text) continue;
-
-      await saveMessageToDB({
-        session_id:         session_id,
-        thread_id:          thread.id,
-        qualtrics_id:       qualtrics_id ?? null,
-        prolific_id:        prolific_id ?? null,
-        prolific_system_id: prolific_system_id ?? null,
-        condition:          condition ?? null,
-        source_url:         source_url ?? null,
-        role:               item.role ?? item.type,
-        content:            text,
-        item_id:            item.id,
-      });
-    }
 
     return new Response(
       JSON.stringify({ ok: true, message_count: items.length }),

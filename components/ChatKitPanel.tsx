@@ -122,6 +122,7 @@ export function ChatKitPanel({
           prolific_system_id: prolificSystemId,
           qualtrics_id: qualtricsId,
           condition: condition,   // ← add this
+          source_url: window.location.href,    // ← ADD THIS LINE
         }),
       });
 
